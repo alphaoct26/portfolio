@@ -3,7 +3,7 @@
 > **Data & Business Analyst | Full-Stack & Agentic AI Builder**  
 > B.Tech CSE (HCI & Game Tech) @ IIIT Nagpur '26 • Immediate Joiner in Pune, India
 
-[![Live Demo](https://img.shields.io/badge/Vercel-Deployed-black?logo=vercel)](https://vercel.com)
+[![Live Demo](https://img.shields.io/badge/Live_Portfolio-Deployed_on_Vercel-success?logo=vercel)](https://portfolio-sigma-liard-lujzh3mvek.vercel.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
