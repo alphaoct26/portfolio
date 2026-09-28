@@ -95,7 +95,7 @@ export const HeroSection: React.FC = () => {
             style={{ animationDelay: '0.15s' }}
           >
             <p className="text-gh-fg-default text-base leading-6 mb-2">
-              Data & Business Analyst · Full-Stack & Agentic AI Builder
+              Full-Stack & Agentic AI Builder
             </p>
             {personal.bioParagraphs.map((p, i) => (
               <p key={i} className="text-gh-fg-muted text-sm leading-5 mb-1.5">{p}</p>
@@ -169,7 +169,7 @@ export const HeroSection: React.FC = () => {
             </div>
             <div className="flex items-center gap-2 mt-2 text-xs text-gh-fg-subtle">
               <span>Less</span>
-              {['#161b22','#0e4429','#006d32','#26a641','#39d353'].map(c => (
+              {['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'].map(c => (
                 <div key={c} className="w-3 h-3 rounded-sm" style={{ background: c }} />
               ))}
               <span>More</span>
