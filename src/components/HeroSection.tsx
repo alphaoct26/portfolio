@@ -43,7 +43,31 @@ export const HeroSection: React.FC = () => {
   const { personal } = PORTFOLIO_DATA;
 
   return (
-    <section ref={ref} className="w-full pt-12 md:pt-16 px-4 sm:px-6">
+    <section ref={ref} className="w-full pt-12 md:pt-16 px-4 sm:px-6 relative">
+      {/* ── Video Background ──────────────────────────────── */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0.18 }}
+        >
+          <source
+            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_171521_25968ba2-b594-4b32-aab7-f6b69398a6fa.mp4"
+            type="video/mp4"
+          />
+        </video>
+        {/* Dark gradient scrim so GitHub dark UI stays legible */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(13,17,23,0.72) 0%, rgba(13,17,23,0.55) 50%, rgba(13,17,23,0.85) 100%)',
+          }}
+        />
+      </div>
+
       {/* GitHub-style top header bar */}
       <div
         className={`${isInView ? 'animate-fade-in-up' : 'opacity-0'} border-b border-gh-border mb-8`}
