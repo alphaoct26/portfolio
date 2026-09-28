@@ -36,8 +36,8 @@ export const PhilosophySection: React.FC = () => {
   ];
 
   return (
-    <section ref={sectionRef} className="w-full px-4 sm:px-6 py-12">
-      <div className="max-w-[1200px] mx-auto">
+    <section ref={sectionRef} className="section-flow w-full px-6 sm:px-10 lg:px-16 py-16">
+      <div className="max-w-[1400px] mx-auto">
         {/* Terminal card */}
         <div
           className={`${isInView ? 'animate-fade-in-up' : 'opacity-0'} gh-code-block overflow-hidden`}

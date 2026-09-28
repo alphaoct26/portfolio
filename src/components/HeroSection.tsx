@@ -43,10 +43,10 @@ export const HeroSection: React.FC = () => {
   const { personal } = PORTFOLIO_DATA;
 
   return (
-    <section ref={ref} className="w-full pt-12 md:pt-16 px-4 sm:px-6 relative">
+    <section ref={ref} className="section-flow w-full pt-12 md:pt-16 px-6 sm:px-10 lg:px-16">
       {/* GitHub-style top header bar */}
       <div
-        className={`${isInView ? 'animate-fade-in-up' : 'opacity-0'} border-b border-gh-border mb-8`}
+        className={`${isInView ? 'animate-fade-in-up' : 'opacity-0'} mb-8`}
         style={{ animationDelay: '0s' }}
       >
         <div className="max-w-[1200px] mx-auto flex items-center gap-3 pb-3">

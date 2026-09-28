@@ -35,11 +35,11 @@ export const SqlSandboxSection: React.FC = () => {
   };
 
   return (
-    <section ref={sectionRef} id="sandbox" className="w-full px-4 sm:px-6 py-10 bg-gh-surface/30 border-y border-gh-border">
-      <div className="max-w-[1200px] mx-auto">
+    <section ref={sectionRef} id="sandbox" className="section-flow w-full px-6 sm:px-10 lg:px-16 py-16">
+      <div className="max-w-[1400px] mx-auto">
         {/* Section header */}
         <div
-          className={`${isInView ? 'animate-fade-in-up' : 'opacity-0'} flex items-center gap-3 mb-6 pb-4 border-b border-gh-border`}
+          className={`${isInView ? 'animate-fade-in-up' : 'opacity-0'} flex items-center gap-3 mb-8`}
           style={{ animationDelay: '0.05s' }}
         >
           <Terminal className="w-5 h-5 text-gh-fg-muted" />

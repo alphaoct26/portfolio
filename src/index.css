@@ -39,6 +39,29 @@ html, body {
   opacity: 0;
 }
 
+/* ─── Section fade — smooth top/bottom gradient so sections bleed into video ─ */
+.section-flow {
+  position: relative;
+}
+.section-flow::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, rgba(13,17,23,0.55) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+.section-flow::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to top, rgba(13,17,23,0.55) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* ─── Marquee ─────────────────────────────────────────────────────────────── */
 @keyframes marqueeAnim {
   0%   { transform: translateX(0%); }

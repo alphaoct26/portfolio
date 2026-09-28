@@ -166,10 +166,10 @@ export const ProjectsSection: React.FC = () => {
   const { projects } = PORTFOLIO_DATA;
 
   return (
-    <section id="work" className="w-full px-4 sm:px-6 py-10">
-      <div className="max-w-[1200px] mx-auto">
+    <section id="work" className="section-flow w-full px-6 sm:px-10 lg:px-16 py-16">
+      <div className="max-w-[1400px] mx-auto">
         {/* Section header */}
-        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gh-border">
+        <div className="flex items-center gap-3 mb-8">
           <svg viewBox="0 0 16 16" className="w-5 h-5 fill-gh-fg-muted" aria-hidden="true">
             <path d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 010-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8z" />
           </svg>
