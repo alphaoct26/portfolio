@@ -115,7 +115,9 @@
 
 /* ─── Repo card ─────────────────────────────────────────────────────────── */
 .gh-repo-card {
-  background: #161b22;
+  background: rgba(22, 27, 34, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid #30363d;
   border-radius: 6px;
   transition: border-color 0.15s;
