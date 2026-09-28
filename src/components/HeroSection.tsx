@@ -72,10 +72,12 @@ export const HeroSection: React.FC = () => {
             style={{ animationDelay: '0.1s' }}
           >
             <div className="flex items-center gap-4 mb-3">
-              {/* Avatar placeholder */}
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-gh-success to-gh-accent border-2 border-gh-border flex items-center justify-center font-mono text-2xl font-bold text-gh-canvas select-none">
-                VW
-              </div>
+              {/* Profile photo */}
+              <img
+                src="/profile.jpg"
+                alt="Vaibhav Waghmare"
+                className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-gh-border select-none"
+              />
               <div>
                 <h1 className="text-2xl md:text-3xl font-semibold text-gh-fg-default leading-tight">
                   {personal.name}
