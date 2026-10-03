@@ -35,10 +35,10 @@ const LINKEDIN = 'https://linkedin.com/in/vaibhav-waghmare-a27803262';
 const GITHUB   = 'https://github.com/alphaoct26';
 
 const METRICS = [
-  { value: '80%+',    label: 'Auto-Patch Confidence' },
-  { value: '70%',     label: 'Pipeline Runtime Cut' },
-  { value: '4 Modes', label: 'Live-Ops Drift Validated' },
-  { value: '4×',      label: 'National Finals' },
+  { value: '80%+', label: 'Auto-Patch Confidence' },
+  { value: '70%',  label: 'Pipeline Runtime Cut' },
+  { value: '4',    label: 'Live-Ops Drift Modes' },
+  { value: '4×',   label: 'National Finals' },
 ];
 
 export interface ProjectItem {
@@ -659,39 +659,41 @@ export default function App() {
       ════════════════════════════════════════════════ */}
       <section
         id="metrics"
-        className="relative overflow-hidden flex flex-col items-center justify-center"
+        className="relative overflow-hidden flex flex-col items-center justify-center px-4 sm:px-8 py-24"
         style={{ minHeight: '100vh' }}
       >
         <VideoFill src={V.metrics} />
+        {/* Subtle dark backdrop to enhance readability and contrast against video */}
+        <div className="absolute inset-0 bg-black/40 pointer-events-none" />
 
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-8 py-24">
+        <div className="relative z-10 w-full max-w-6xl mx-auto">
           <motion.p
-            className="text-white/40 text-[11px] sm:text-[13px] tracking-[0.25em] uppercase mb-16 md:mb-24 text-center"
+            className="text-white/50 text-[11px] sm:text-[13px] tracking-[0.25em] uppercase mb-12 md:mb-16 text-center font-mono"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 1.2 }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            Performance Metrics
+            // Performance Metrics &amp; Benchmarks
           </motion.p>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8 lg:gap-10">
             {METRICS.map((m, i) => (
               <motion.div
                 key={m.label}
-                className="text-center"
+                className="text-center p-6 sm:p-8 rounded-2xl bg-black/75 border border-white/15 backdrop-blur-xl hover:border-white/35 transition-all shadow-xl flex flex-col items-center justify-center min-h-[160px]"
                 initial={{ y: 30, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: i * 0.15 }}
                 viewport={{ once: true, amount: 0.3 }}
               >
                 <div
-                  className="text-white font-light leading-none tracking-[-0.04em] whitespace-nowrap"
-                  style={{ fontSize: 'clamp(36px, 6vw, 80px)' }}
+                  className="text-white font-light leading-none tracking-[-0.04em] whitespace-nowrap mb-4"
+                  style={{ fontSize: 'clamp(32px, 4.5vw, 56px)' }}
                 >
                   {m.value}
                 </div>
-                <div className="text-white/40 text-[11px] sm:text-[13px] mt-4 tracking-wide">
+                <div className="text-white/50 text-[11px] sm:text-[13px] tracking-wide font-mono leading-snug">
                   {m.label}
                 </div>
               </motion.div>
