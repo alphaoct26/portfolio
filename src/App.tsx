@@ -335,7 +335,7 @@ export default function App() {
       ════════════════════════════════════════════════ */}
       <section
         className="relative flex flex-col overflow-hidden"
-        style={{ height: '100dvh' }}
+        style={{ minHeight: '100vh' }}
       >
         {/* Hero video (NOT autoplay — scrubbed by mouse) */}
         <VideoFill src={V.hero} videoRef={heroRef} />
@@ -450,12 +450,16 @@ export default function App() {
       {/* ════════════════════════════════════════════════
           METRICS
       ════════════════════════════════════════════════ */}
-      <section id="metrics" className="relative overflow-hidden" style={{ minHeight: '100vh' }}>
+      <section
+        id="metrics"
+        className="relative overflow-hidden flex flex-col items-center justify-center"
+        style={{ minHeight: '100vh' }}
+      >
         <VideoFill src={V.metrics} />
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6 py-32">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-8 py-24">
           <motion.p
-            className="text-white/40 text-[13px] sm:text-[14px] tracking-[0.2em] uppercase mb-20 text-center"
+            className="text-white/40 text-[11px] sm:text-[13px] tracking-[0.25em] uppercase mb-16 md:mb-24 text-center"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 1.2 }}
@@ -464,7 +468,7 @@ export default function App() {
             Performance Metrics
           </motion.p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-16 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-6">
             {METRICS.map((m, i) => (
               <motion.div
                 key={m.label}
@@ -475,12 +479,12 @@ export default function App() {
                 viewport={{ once: true, amount: 0.3 }}
               >
                 <div
-                  className="text-white font-light leading-none tracking-[-0.04em]"
-                  style={{ fontSize: 'clamp(48px, 10vw, 96px)' }}
+                  className="text-white font-light leading-none tracking-[-0.04em] whitespace-nowrap"
+                  style={{ fontSize: 'clamp(36px, 6vw, 80px)' }}
                 >
                   {m.value}
                 </div>
-                <div className="text-white/40 text-[13px] sm:text-[15px] mt-4 tracking-wide">
+                <div className="text-white/40 text-[11px] sm:text-[13px] mt-4 tracking-wide">
                   {m.label}
                 </div>
               </motion.div>
@@ -494,8 +498,8 @@ export default function App() {
       ════════════════════════════════════════════════ */}
       <section
         id="work"
-        className="relative overflow-hidden flex flex-col px-8 sm:px-12 md:px-16 py-12 sm:py-16"
-        style={{ height: '100dvh' }}
+        className="relative overflow-hidden flex flex-col px-8 sm:px-12 md:px-16 pt-24 pb-16"
+        style={{ minHeight: '100vh' }}
       >
         <VideoFill src={V.tech} />
 
