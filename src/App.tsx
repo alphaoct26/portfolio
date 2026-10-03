@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
   motion,
   AnimatePresence,
@@ -7,6 +7,17 @@ import {
   useTransform,
   useMotionTemplate,
 } from 'framer-motion';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  Sparkles,
+  CheckCircle2,
+  Terminal,
+  Cpu,
+  Gamepad2,
+  GitBranch,
+} from 'lucide-react';
 
 /* ── Video URLs ───────────────────────────────────────────────────────────── */
 const V = {
@@ -24,23 +35,190 @@ const LINKEDIN = 'https://linkedin.com/in/vaibhav-waghmare-a27803262';
 const GITHUB   = 'https://github.com/alphaoct26';
 
 const METRICS = [
-  { value: '70%',    label: 'ETL Runtime Cut' },
-  { value: '99.8%',  label: 'QC Signal Integrity' },
-  { value: '10 Mos', label: 'Production Internship' },
-  { value: '4×',     label: 'National Finals' },
+  { value: '80%+',    label: 'Auto-Patch Confidence' },
+  { value: '70%',     label: 'Pipeline Runtime Cut' },
+  { value: '4 Modes', label: 'Live-Ops Drift Validated' },
+  { value: '4×',      label: 'National Finals' },
 ];
 
-const PROJECTS = [
-  { title: 'Sentinel QC',           desc: 'Autonomous quality control. 40+ test specs. Zero hallucination guarantee on all LLM pipeline outputs.' },
-  { title: 'Auto-Analyst ETL',      desc: 'PostgreSQL medallion pipeline with text-to-SQL and AST safety validation layer.' },
-  { title: 'Invoice Intelligence',  desc: 'OCR + NLP for 500+ monthly invoices. 65% manual entry eliminated. Anomaly detection built-in.' },
-  { title: 'ATS Tailor',            desc: 'Multi-LLM resume engine. Single-request pipeline reduces API cost by 50%.' },
+export interface ProjectItem {
+  id: string;
+  badge: string;
+  title: string;
+  subtitle: string;
+  desc: string;
+  bullets: string[];
+  metrics: { value: string; label: string };
+  tech: string[];
+  github: string;
+}
+
+const PROJECTS: ProjectItem[] = [
+  {
+    id: 'sentinel-qc',
+    badge: 'UBISOFT TARGET · GAME QC & TEST AGENT',
+    title: 'Sentinel: Self-Healing AI Test-Automation Agent for Live-Ops QC',
+    subtitle: 'Autonomous Test Authoring, Headless Execution & Diagnostic Loop',
+    desc: 'An AI-driven test-automation prototype tailored for live-service game QC workflows. Converts plain-English gameplay test specifications into headless Playwright suites, executes runs, and captures DOM & screenshots on failure to drive zero-downtime regression testing.',
+    bullets: [
+      'Self-Healing Diagnostic Loop: Accurately classifies failure modes (selector drift, assertion drift, genuine bug), automatically synthesizing patches only at 80%+ confidence and re-verifying every fix.',
+      'Human Review Safeguard: On genuine backend faults (e.g. HTTP 500), declines patching and immediately logs structured incident reports, strictly protecting test-suite integrity.',
+      'RAG & Audit Trail: Auto-produces before/after screenshots, unified patch diffs, and master audit logs; integrated RAG assistant over run logs and test specs, validated across 4 simulated live-ops drift modes.',
+    ],
+    metrics: { value: '80%+', label: 'Autonomous Patch Confidence' },
+    tech: ['Python', 'Playwright', 'LLM-based diagnosis', 'RAG', 'CLI', 'Game QC'],
+    github: 'https://github.com/alphaoct26/Sentinel-Self-Healing-AI-Test-Automation-Agent-for-Live-Ops-QC-Workflows',
+  },
+  {
+    id: 'auto-analyst',
+    badge: 'AI DATA WORKFLOWS · TEXT-TO-SQL',
+    title: 'Auto-Analyst: AI-Powered ETL & Data Workflow Automation',
+    subtitle: 'Medallion Architecture & Multi-LLM SQL Validation',
+    desc: 'Production-grade data automation pipeline ingesting multi-source API data into PostgreSQL, eliminating manual analyst reporting with automated failover and safety verification layers.',
+    bullets: [
+      'Multi-LLM Text-to-SQL tool with automated failover across Amazon Bedrock & OpenAI APIs with AST syntax and schema safety validation layers.',
+      'Validated and debugged SQL accuracy with end-to-end tests; cut pipeline execution runtime by 70%, saving 8+ analyst hours per week.',
+      'Engineered structured Medallion data flow (Bronze -> Silver -> Gold) with automated drift anomaly alerts and Power BI integration.',
+    ],
+    metrics: { value: '70%', label: 'Pipeline Runtime Cut' },
+    tech: ['Python', 'PostgreSQL', 'Amazon Bedrock', 'OpenAI APIs', 'Power BI', 'SQL'],
+    github: 'https://github.com/alphaoct26/AI_workflow',
+  },
+  {
+    id: 'preci-forge',
+    badge: 'ENTERPRISE QC · BACKEND & CI/CD',
+    title: 'Backend Developer Intern (Full Stack & QC Data Pipelines)',
+    subtitle: 'Preci Forge & Gears, Pune · Multi-Module Production Systems',
+    desc: 'Engineered REST APIs and JSON data pipelines across 6 production modules, integrating Sales, Manufacturing, and QC telemetry while collaborating directly with cross-functional engineering teams.',
+    bullets: [
+      'Built CI/CD pipelines with automated unit and integration test suites ensuring dependable production releases.',
+      'Debugged and refactored PostgreSQL schemas to eliminate bottlenecks; modularized frontend with Micro-frontends and Redux Toolkit to strict A11y standards.',
+      'Active agile cycles: sprint planning, stand-ups, retrospectives, and client demos using iterative development with stakeholder feedback.',
+    ],
+    metrics: { value: '6 Modules', label: 'QC & Prod Systems Connected' },
+    tech: ['Node.js', 'Express.js', 'Next.js', 'PostgreSQL', 'CI/CD', 'Redux Toolkit'],
+    github: 'https://github.com/alphaoct26',
+  },
+  {
+    id: 'ats-tailor',
+    badge: 'AGENTIC PIPELINES · COST OPTIMIZATION',
+    title: 'ATS Tailor: Autonomous Multi-LLM Resume & Pipeline Engine',
+    subtitle: 'Single-Pass Inference Architecture & Hallucination Guard',
+    desc: 'High-throughput document analysis and career evaluation pipeline with multi-model parallel inference and strict structured validation.',
+    bullets: [
+      'Orchestrated multi-LLM optimization pipeline reducing token consumption and API operational costs by 50% via single-request parallel execution.',
+      'Constructed AST validation and JSON schema enforcement to ensure zero hallucination in candidate semantic match scoring.',
+      'Containerized with Docker for repeatable local development and zero-latency inference workflows.',
+    ],
+    metrics: { value: '50%', label: 'LLM API Cost Reduction' },
+    tech: ['Python', 'FastAPI', 'Multi-LLM', 'Docker', 'TailwindCSS'],
+    github: 'https://github.com/alphaoct26/Ats_Tailor-',
+  },
+  {
+    id: 'dimensions-game-tech',
+    badge: 'HCI & GAME TECH · NATIONAL FINALIST',
+    title: 'Dimensions Game Tech Lab & Hackathon Prototypes',
+    subtitle: 'IIIT Nagpur HCI Specialization, Game Jams & SIH Finalist',
+    desc: 'Computer Science & Engineering graduate (B.Tech, IIIT Nagpur) with HCI & Game Technology specialization. Leading developer communities, Game Jams, and national hackathon squads.',
+    bullets: [
+      'Dimensions Club Organizer, IIITN: Organized Game Jams and hackathons at VLG Tech Fest for 30+ participants, fostering interactive game prototyping.',
+      'Smart India Hackathon 2023 National Finalist: Led a 6-member engineering squad shipping a production-ready digital wool platform in 36 hours.',
+      'Hackndore 2024 Top 10 of 200+ teams; Hack4Future 2nd of 50+ teams (assistive ML/NLP tool for ADHD/ASD students).',
+    ],
+    metrics: { value: '4× Finals', label: 'National Hackathons' },
+    tech: ['C++', 'C#', 'Python', 'Game Jams', 'HCI', 'Unity Concepts'],
+    github: 'https://github.com/alphaoct26',
+  },
 ];
 
-const LAYERS = [
-  { num: 'Layer 01', name: 'Ingest',   detail: 'PostgreSQL · Python · ETL · OCR · Power BI' },
-  { num: 'Layer 02', name: 'Process',  detail: 'Multi-LLM · FastAPI · Docker · Railway · SQL Guard' },
-  { num: 'Layer 03', name: 'Deliver',  detail: 'React · TypeScript · REST API · Vite · PDF.js' },
+const RND_LAYERS = [
+  {
+    tier: 'TIER 01',
+    role: 'Execution & Verification',
+    name: 'Game QC & Test Automation Engine',
+    detail: 'Python Scripting · Playwright · Headless Test Suites · DOM & Screenshot Capture · E2E Testing',
+    desc: 'Converts gameplay specifications into automated headless test suites. Runs headlessly across live-ops builds, capturing DOM snapshots, console traces, and visual artifacts on regression.',
+    badge: 'TESTING LIFECYCLE',
+  },
+  {
+    tier: 'TIER 02',
+    role: 'Autonomous Remediation',
+    name: 'Gen-AI Diagnostic & Self-Healing Core',
+    detail: 'LLM APIs (Bedrock, OpenAI, Claude, Gemini) · RAG Systems · Prompt Engineering',
+    desc: 'Classifies failure roots: selector drift vs. assertion drift vs. genuine bugs. Synthesizes verified code patches at 80%+ confidence. Declines to patch backend 500 faults via Human Review Safeguard.',
+    badge: 'AI INTEGRATION',
+  },
+  {
+    tier: 'TIER 03',
+    role: 'High-Performance Engineering',
+    name: 'Game Technology, Systems & Languages',
+    detail: 'C++ Programming · C# Programming · Python · HCI & Game Tech (IIITN) · PostgreSQL',
+    desc: 'B.Tech CSE with HCI & Game Technology specialization from IIIT Nagpur. Experience in Game Jam organization, memory-conscious game scripting, and data pipelines connecting live QC telemetry.',
+    badge: 'GAME TECH & HCI',
+  },
+  {
+    tier: 'TIER 04',
+    role: 'Production Tooling & SDLC',
+    name: 'CI/CD Build Automation & Telemetry',
+    detail: 'Jenkins · TeamCity · GitHub Actions · Git · Docker · Audit Logs & Diffs',
+    desc: 'Integrates automated test suites into Jenkins & TeamCity CI/CD pipelines. Emits before/after screenshots, unified patch diffs, and master audit logs for cross-functional game QC teams.',
+    badge: 'CI/CD & DEVOPS',
+  },
+];
+
+const SKILL_PILLARS = [
+  {
+    category: 'Automation & Testing',
+    subtitle: 'Game QC & Regression Workflows',
+    iconType: 'terminal',
+    skills: [
+      'Python scripting & debugging techniques',
+      'Playwright test automation framework',
+      'Unit, Integration & End-to-End (E2E) testing',
+      'SDLC & testing lifecycle troubleshooting',
+      'Headless browser execution & DOM analysis',
+      'Simulated live-ops drift modes & regression runs',
+    ],
+  },
+  {
+    category: 'AI/ML & Gen-AI Integration',
+    subtitle: 'RAG & Autonomous Test Agents',
+    iconType: 'cpu',
+    skills: [
+      'Gen-AI and RAG fundamentals over code/logs',
+      'LLM APIs: OpenAI, Amazon Bedrock, Gemini, Claude',
+      'Autonomous self-healing diagnostic loops',
+      'Human Review Safeguards & incident triage',
+      'Multi-LLM Text-to-SQL with automated failover',
+      'Prompt engineering & context optimization',
+    ],
+  },
+  {
+    category: 'Languages & Game Tech',
+    subtitle: 'IIIT Nagpur HCI & Game Specialization',
+    iconType: 'gamepad',
+    skills: [
+      'C++ programming (C plus plus) & OOP',
+      'C# programming (C Sharp) & game mechanics',
+      'Python (tooling, automation, backend APIs)',
+      'JavaScript / TypeScript / Node.js / React',
+      'PostgreSQL (Medallion) & schema refactoring',
+      'Dimensions Game Jam Organizer (30+ devs)',
+    ],
+  },
+  {
+    category: 'Tools, CI/CD & Process',
+    subtitle: 'Production Pipelines & Leadership',
+    iconType: 'git',
+    skills: [
+      'CI/CD Tools: Jenkins & TeamCity pipelines',
+      'Version Control Systems (Git) & GitHub Actions',
+      'Technical repair docs (unified diffs, audit logs)',
+      'Agile / sprints, stand-ups, cross-functional QC',
+      'Smart India Hackathon 2023 National Finalist',
+      'Hack4Future 2nd Place & Hackndore Top 10',
+    ],
+  },
 ];
 
 /* ── Scramble character pool ─────────────────────────────────────────────── */
@@ -163,6 +341,16 @@ function VideoFill({ src, videoRef }: { src: string; videoRef?: React.RefObject<
   );
 }
 
+function SkillIcon({ type }: { type: string }) {
+  switch (type) {
+    case 'terminal': return <Terminal className="w-5 h-5 text-emerald-400" />;
+    case 'cpu':      return <Cpu className="w-5 h-5 text-purple-400" />;
+    case 'gamepad':  return <Gamepad2 className="w-5 h-5 text-cyan-400" />;
+    case 'git':      return <GitBranch className="w-5 h-5 text-amber-400" />;
+    default:         return <Terminal className="w-5 h-5 text-white" />;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    APP
 ═══════════════════════════════════════════════════════════════════════════ */
@@ -172,6 +360,26 @@ export default function App() {
   const [hoveredLink,  setHoveredLink]      = useState<string | null>(null);
   const [hireHovered,  setHireHovered]      = useState(false);
   const [logoHovered,  setLogoHovered]      = useState(false);
+
+  /* Carousel state */
+  const [activeProjectIdx, setActiveProjectIdx] = useState(0);
+  const [isCarouselHovered, setIsCarouselHovered] = useState(false);
+
+  const nextProject = useCallback(() => {
+    setActiveProjectIdx((prev) => (prev + 1) % PROJECTS.length);
+  }, []);
+
+  const prevProject = useCallback(() => {
+    setActiveProjectIdx((prev) => (prev - 1 + PROJECTS.length) % PROJECTS.length);
+  }, []);
+
+  useEffect(() => {
+    if (isCarouselHovered) return;
+    const timer = setInterval(nextProject, 7000);
+    return () => clearInterval(timer);
+  }, [isCarouselHovered, nextProject]);
+
+  const activeProject = PROJECTS[activeProjectIdx];
 
   /* hero video scrub ─────────────────────────────────────────────────── */
   const heroRef    = useRef<HTMLVideoElement>(null) as React.RefObject<HTMLVideoElement>;
@@ -396,21 +604,20 @@ export default function App() {
                 initial={{ y: 25, opacity: 0 }}
                 animate={entranceDone ? { y: 0, opacity: 1 } : {}}
                 transition={{ duration: 0.9, ease: [0.215, 0.610, 0.355, 1.000], delay: 0.2 }}
-                className="max-w-sm text-[13px] sm:text-[15px] text-white/60 leading-relaxed"
+                className="max-w-md text-[13px] sm:text-[15px] text-white/60 leading-relaxed"
               >
-                Built at the intersection of data engineering and agentic AI.
-                Systems that map raw signals, pipeline latency, and operational state into a single adaptive intelligence layer.
+                Junior R&amp;D Engineer (IIIT Nagpur · HCI &amp; Game Technology). Crafting Python automation tools, Gen-AI diagnostic agents, and self-healing test frameworks for game testing and live-ops QC workflows.
               </motion.p>
             </div>
 
             {/* Right ─ role */}
             <h1
               className="font-light text-white leading-[0.95] tracking-[-0.03em] text-left md:text-right"
-              style={{ fontSize: 'clamp(40px, 10vw, 100px)' }}
+              style={{ fontSize: 'clamp(36px, 8vw, 84px)' }}
             >
-              <ScrambleIn text="Data"      delay={700}  triggered={entranceDone} />
+              <ScrambleIn text="Junior R&D" delay={700}  triggered={entranceDone} />
               <br />
-              <ScrambleIn text="Engineer"  delay={1000} triggered={entranceDone} />
+              <ScrambleIn text="Engineer"   delay={1000} triggered={entranceDone} />
             </h1>
           </div>
         </motion.div>
@@ -435,14 +642,14 @@ export default function App() {
         {/* 3D scrolling text */}
         <div className="relative z-20 max-w-5xl" style={{ perspective: 400 }}>
           <motion.p
-            style={{ transform: xfm, opacity: opac, fontSize: 'clamp(22px, 4vw, 42px)' }}
+            style={{ transform: xfm, opacity: opac, fontSize: 'clamp(20px, 3.5vw, 38px)' }}
             className="font-sans font-normal text-white leading-[1.35] tracking-[-0.02em] select-none text-center px-6 sm:px-12"
           >
-            A data engineering system built on the architecture of PostgreSQL medallion layers.
-            Vaibhav translates raw signals into structured intelligence.
-            Every query becomes measurable, optimised, and visible.
-            The pipeline continuously reconstructs operational state as a dynamic data map.
-            Noise becomes actionable insight.
+            Autonomous test automation engineered for live-service game workflows.
+            Vaibhav builds self-healing test agents, Gen-AI diagnostic loops, and automated pipeline tooling.
+            From plain-English specifications to headless Playwright suites with RAG-powered failure audits.
+            Selector drift, assertion drift, and genuine faults are classified and healed with mathematical confidence.
+            Uncompromising quality control for world-class gaming experiences.
           </motion.p>
         </div>
       </section>
@@ -494,126 +701,295 @@ export default function App() {
       </section>
 
       {/* ════════════════════════════════════════════════
-          TECHNOLOGY — projects grid
+          PROJECTS CAROUSEL — Game QC & AI Automation
       ════════════════════════════════════════════════ */}
       <section
         id="work"
-        className="relative overflow-hidden flex flex-col px-8 sm:px-12 md:px-16 pt-24 pb-16"
+        className="relative overflow-hidden flex flex-col justify-center px-4 sm:px-8 md:px-16 pt-24 pb-20"
         style={{ minHeight: '100vh' }}
+        onMouseEnter={() => setIsCarouselHovered(true)}
+        onMouseLeave={() => setIsCarouselHovered(false)}
       >
         <VideoFill src={V.tech} />
+        {/* Dark overlay for contrast */}
+        <div className="absolute inset-0 bg-black/75 pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col h-full">
-          {/* Top */}
-          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-6">
-            <motion.h2
-              className="text-white font-light leading-[0.95] tracking-[-0.03em]"
-              style={{ fontSize: 'clamp(36px, 8vw, 72px)' }}
-              initial={{ y: 40, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 1.0 }}
-              viewport={{ once: true, amount: 0.3 }}
-            >
-              Agentic<br />Intelligence
-            </motion.h2>
-            <motion.p
-              className="text-white/50 text-[13px] sm:text-[15px] leading-relaxed max-w-xs md:text-right md:pt-2"
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 1.0, delay: 0.2 }}
-              viewport={{ once: true, amount: 0.3 }}
-            >
-              Systems that learn your data baseline in hours.
-              Every signal mapped, predicted, and optimised in real time.
-            </motion.p>
+        <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col gap-6">
+          {/* Header row */}
+          <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 border-b border-white/10 pb-6">
+            <div>
+              <div className="flex items-center gap-2 text-white/50 text-[11px] sm:text-[12px] tracking-[0.2em] uppercase mb-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>R&amp;D Projects · Interactive Carousel</span>
+              </div>
+              <h2
+                className="text-white font-light leading-[1.0] tracking-[-0.03em]"
+                style={{ fontSize: 'clamp(28px, 6vw, 56px)' }}
+              >
+                Game QC &amp; AI Automation
+              </h2>
+              <p className="text-white/50 text-[13px] sm:text-[14px] mt-2 max-w-xl">
+                Targeted for Ubisoft Junior R&amp;D Engineer. Click any project card to open its GitHub repository directly.
+              </p>
+            </div>
+
+            {/* Navigation controls */}
+            <div className="flex items-center gap-3">
+              <span className="text-white/40 text-[12px] font-mono tracking-wider mr-2">
+                [{String(activeProjectIdx + 1).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}]
+              </span>
+              <button
+                onClick={prevProject}
+                aria-label="Previous Project"
+                className="w-10 h-10 rounded-full border border-white/20 bg-white/5 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer backdrop-blur-md active:scale-95"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={nextProject}
+                aria-label="Next Project"
+                className="w-10 h-10 rounded-full border border-white/20 bg-white/5 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer backdrop-blur-md active:scale-95"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
-          <div className="flex-1" />
+          {/* Active Featured Project Card */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeProject.id}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => window.open(activeProject.github, '_blank', 'noopener,noreferrer')}
+              className="group relative cursor-pointer rounded-2xl p-6 sm:p-8 md:p-10 border border-white/15 bg-black/80 backdrop-blur-xl hover:border-white/40 transition-all duration-300 shadow-2xl hover:shadow-[0_0_40px_rgba(255,255,255,0.08)]"
+            >
+              {/* Card top row */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/10">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-2.5 py-1 rounded-md text-[10px] sm:text-[11px] font-mono tracking-widest uppercase bg-white/10 text-cyan-300 border border-cyan-400/20">
+                    {activeProject.badge}
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-400/90 pl-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                    <span>GITHUB VERIFIED</span>
+                  </span>
+                </div>
 
-          {/* Projects grid */}
-          <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1.0, delay: 0.3 }}
-            viewport={{ once: true, amount: 0.3 }}
-          >
-            {PROJECTS.map((p, i) => (
-              <motion.div
-                key={p.title}
-                initial={{ y: 20, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.7, delay: i * 0.1 }}
-                viewport={{ once: true, amount: 0.3 }}
-              >
-                <div className="text-white text-[14px] sm:text-[16px] font-normal mb-2">{p.title}</div>
-                <div className="text-white/40 text-[12px] sm:text-[14px] leading-relaxed">{p.desc}</div>
-              </motion.div>
-            ))}
-          </motion.div>
+                <div className="flex items-center gap-2 text-white/70 group-hover:text-white transition-colors text-[13px] font-mono">
+                  <span>View Repository</span>
+                  <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </div>
+              </div>
+
+              {/* Title & Subtitle */}
+              <h3 className="text-white text-[22px] sm:text-[28px] md:text-[32px] font-light tracking-tight leading-tight group-hover:text-cyan-200 transition-colors">
+                {activeProject.title}
+              </h3>
+              <p className="text-white/40 text-[12px] sm:text-[14px] font-mono mt-1 mb-4">
+                {activeProject.subtitle}
+              </p>
+
+              {/* Overview */}
+              <p className="text-white/70 text-[14px] sm:text-[15px] leading-relaxed mb-6 max-w-4xl">
+                {activeProject.desc}
+              </p>
+
+              {/* Resume bullet points */}
+              <div className="space-y-3 mb-8">
+                {activeProject.bullets.map((b, bIdx) => (
+                  <div key={bIdx} className="flex items-start gap-3 text-[13px] sm:text-[14px] text-white/80 leading-relaxed">
+                    <span className="text-cyan-400 font-mono text-[12px] select-none mt-0.5">▶</span>
+                    <span>{b}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Card Footer: Metrics & Tech tags */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 border-t border-white/10">
+                <div className="flex items-center gap-3">
+                  <span className="text-[20px] sm:text-[24px] font-light text-white font-mono">
+                    {activeProject.metrics.value}
+                  </span>
+                  <span className="text-white/40 text-[11px] sm:text-[12px] uppercase tracking-wider font-mono">
+                    {activeProject.metrics.label}
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  {activeProject.tech.map((t) => (
+                    <span
+                      key={t}
+                      className="px-2.5 py-1 rounded text-[11px] font-mono bg-white/5 border border-white/10 text-white/70 group-hover:border-white/20 transition-colors"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Project Switcher Thumbnails / Dots */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mt-2">
+            {PROJECTS.map((p, idx) => {
+              const isCurrent = idx === activeProjectIdx;
+              return (
+                <button
+                  key={p.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveProjectIdx(idx);
+                  }}
+                  className={`text-left p-3.5 rounded-xl border transition-all cursor-pointer backdrop-blur-md flex flex-col justify-between h-[85px] ${
+                    isCurrent
+                      ? 'border-cyan-400/80 bg-white/10 shadow-[0_0_20px_rgba(34,211,238,0.15)]'
+                      : 'border-white/10 bg-black/40 hover:bg-white/5 hover:border-white/25'
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <span className="text-[10px] font-mono text-white/40">
+                      0{idx + 1}
+                    </span>
+                    <a
+                      href={p.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-white/30 hover:text-white transition-colors"
+                      title="Open in GitHub"
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                  <div className="text-[12px] font-normal text-white truncate w-full">
+                    {p.id === 'sentinel-qc' ? 'Sentinel QC' : p.id === 'auto-analyst' ? 'Auto-Analyst' : p.id === 'preci-forge' ? 'Preci Forge' : p.id === 'ats-tailor' ? 'ATS Tailor' : 'Game Tech Lab'}
+                  </div>
+                  <div className="text-[10px] font-mono text-cyan-400/80 truncate w-full">
+                    {p.metrics.value} {p.metrics.label.split(' ')[0]}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </section>
 
       {/* ════════════════════════════════════════════════
-          ARCHITECTURE — pure black, no video
+          STACK & TECHNICAL ARCHITECTURE
+          Targeted specifically for Ubisoft Junior R&D Engineer opening
       ════════════════════════════════════════════════ */}
       <section
         id="stack"
-        className="flex items-center justify-center text-center"
+        className="flex flex-col items-center justify-center text-center px-4 sm:px-8 md:px-16 py-28"
         style={{ minHeight: '100vh', background: '#000' }}
       >
-        <div className="max-w-3xl w-full px-6 py-32">
+        <div className="max-w-5xl w-full mx-auto">
+          {/* Section Header */}
           <motion.div
             initial={{ y: 30, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: 1.0 }}
-            viewport={{ once: true, amount: 0.4 }}
+            viewport={{ once: true, amount: 0.3 }}
+            className="flex flex-col items-center"
           >
-            <p className="text-white/40 text-[13px] sm:text-[14px] tracking-[0.2em] uppercase mb-8">
-              Architecture
-            </p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/15 bg-white/5 backdrop-blur-md mb-6 text-[12px] text-white/70">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Target Role · Ubisoft Junior R&amp;D Engineer</span>
+            </div>
+
             <h2
-              className="text-white font-light leading-[1.15] tracking-[-0.02em] mb-10"
-              style={{ fontSize: 'clamp(28px, 6vw, 56px)' }}
+              className="text-white font-light leading-[1.1] tracking-[-0.02em] mb-6"
+              style={{ fontSize: 'clamp(28px, 5.5vw, 56px)' }}
             >
-              Three layers. Zero friction.
+              AI Integration &amp; Game QC Stack
             </h2>
-            <p className="text-white/45 text-[15px] sm:text-[17px] leading-relaxed max-w-xl mx-auto">
-              Ingest layer captures raw signals and structured data.
-              Processing layer isolates intent and validates outputs.
-              Delivery layer serves structured intelligence to any connected system.
+
+            <p className="text-white/50 text-[14px] sm:text-[16px] leading-relaxed max-w-2xl mx-auto">
+              Bridging Python scripting, Gen-AI diagnostic agents, and automated test frameworks to elevate live-service game QC workflows and continuous integration.
             </p>
           </motion.div>
 
-          <motion.div
-            className="mt-20 flex flex-col items-center gap-4"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.4 }}
-            viewport={{ once: true, amount: 0.4 }}
-          >
-            {LAYERS.map((layer, i) => (
+          {/* 4-Tier QC & AI Architecture Blueprint */}
+          <div className="mt-14 flex flex-col gap-4 text-left">
+            <div className="text-white/40 text-[11px] tracking-[0.2em] uppercase mb-1">
+              // System Architecture Blueprint
+            </div>
+            {RND_LAYERS.map((layer, i) => (
               <motion.div
-                key={layer.num}
-                className="w-full flex items-center justify-between px-6 rounded-lg"
-                style={{
-                  maxWidth: 448,
-                  height: 72,
-                  border: '1px solid rgba(255,255,255,0.10)',
-                }}
+                key={layer.tier}
+                className="w-full rounded-xl p-5 sm:p-6 border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/25 transition-all duration-300"
                 initial={{ y: 20, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.4 + i * 0.1 }}
-                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.7, delay: i * 0.1 }}
+                viewport={{ once: true, amount: 0.2 }}
               >
-                <div className="text-left">
-                  <span className="block text-white/30 text-[12px] tracking-[0.15em] uppercase">{layer.num}</span>
-                  <span className="text-white/35 text-[11px] tracking-[0.05em]">{layer.detail}</span>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                  <div className="flex items-center gap-3">
+                    <span className="px-2.5 py-0.5 rounded text-[11px] font-mono tracking-wider bg-white/10 text-white/80 border border-white/10">
+                      {layer.tier}
+                    </span>
+                    <span className="text-white text-[17px] sm:text-[19px] font-light">
+                      {layer.name}
+                    </span>
+                  </div>
+                  <span className="text-cyan-400/80 text-[11px] font-mono tracking-wider uppercase">
+                    {layer.badge}
+                  </span>
                 </div>
-                <span className="text-white text-[16px] sm:text-[18px] font-light">{layer.name}</span>
+
+                <p className="text-white/60 text-[13px] sm:text-[14px] leading-relaxed mb-3">
+                  {layer.desc}
+                </p>
+
+                <div className="pt-2 border-t border-white/5 flex flex-wrap items-center gap-x-2 gap-y-1 text-white/40 text-[11px] sm:text-[12px] font-mono">
+                  <span className="text-white/60">Core:</span>
+                  <span>{layer.detail}</span>
+                </div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
+
+          {/* 4-Pillar Competencies Grid (Exact Resume Match for Ubisoft) */}
+          <div className="mt-20 text-left">
+            <div className="text-white/40 text-[11px] tracking-[0.2em] uppercase mb-6 text-center">
+              // Ubisoft Technical Competencies Matrix
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {SKILL_PILLARS.map((pillar, i) => (
+                <motion.div
+                  key={pillar.category}
+                  className="rounded-xl p-6 border border-white/10 bg-black/60 backdrop-blur-md hover:border-white/25 transition-all"
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.7, delay: i * 0.1 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <SkillIcon type={pillar.iconType} />
+                    <h3 className="text-white text-[16px] sm:text-[18px] font-medium">
+                      {pillar.category}
+                    </h3>
+                  </div>
+                  <p className="text-white/40 text-[12px] mb-4 font-mono">
+                    {pillar.subtitle}
+                  </p>
+
+                  <ul className="space-y-2">
+                    {pillar.skills.map((skill, sIdx) => (
+                      <li key={sIdx} className="flex items-start gap-2.5 text-[12px] sm:text-[13px] text-white/70">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                        <span>{skill}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -636,8 +1012,7 @@ export default function App() {
                 <span className="text-[15px] font-medium tracking-tight">Vaibhav Waghmare</span>
               </div>
               <p className="text-white/40 text-[14px] sm:text-[15px] leading-relaxed max-w-sm">
-                The next evolution of human-data interaction.
-                Built for those who refuse to accept bottlenecks in the pipeline of intelligence.
+                Junior R&amp;D Engineer building the next generation of game testing, AI integration, and live-ops QC automation workflows.
               </p>
 
               <div className="mt-8 flex flex-col gap-3">
@@ -651,7 +1026,7 @@ export default function App() {
             </div>
 
             <p className="text-white/25 text-[12px] mt-12">
-              © 2026 Vaibhav Waghmare. All rights reserved.
+              © 2026 Vaibhav Waghmare · IIIT Nagpur CSE (HCI &amp; Game Tech).
             </p>
           </div>
         </div>
